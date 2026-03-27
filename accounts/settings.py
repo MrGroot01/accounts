@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-7t3a+ene2-vf%f)e-ce*5htfwq^5q8=_64z=469mih299sb_)f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -52,6 +52,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://ecommerce-website-gold.vercel.app"
+]
 ROOT_URLCONF = 'accounts.urls'
 
 TEMPLATES = [
