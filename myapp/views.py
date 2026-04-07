@@ -4,7 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import UserRegister, LoginHistory
 
 
-# ================= REGISTER =================
 @csrf_exempt
 def register_user(request):
 
@@ -36,7 +35,6 @@ def register_user(request):
     return JsonResponse({"error": "Invalid request"}, status=405)
 
 
-# ================= LOGIN =================
 @csrf_exempt
 def login_user(request):
 
@@ -65,7 +63,7 @@ def login_user(request):
                 "message": "Wrong password"
             })
 
-        # ✅ save login history
+        # save login history
         LoginHistory.objects.create(user=user)
 
         return JsonResponse({
@@ -74,52 +72,3 @@ def login_user(request):
         })
 
     return JsonResponse({"error": "Invalid request"}, status=405)
-
-
-# ================= GOOGLE LOGIN =================
-@csrf_exempt
-def google_login(request):
-
-    if request.method == "POST":
-
-        try:
-            data = json.loads(request.body)
-        except:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
-
-        name = data.get("name")
-        email = data.get("email")
-        picture = data.get("picture")
-
-        if not email:
-            return JsonResponse({"error": "Email required"}, status=400)
-
-        # check if user already exists
-        user = UserRegister.objects.filter(email=email).first()
-
-        if not user:
-            user = UserRegister.objects.create(
-                name=name,
-                email=email,
-                picture=picture
-            )
-
-        # ✅ store login history
-        LoginHistory.objects.create(user=user)
-
-        return JsonResponse({
-            "message": "Google Login Successful",
-            "name": user.name,
-            "email": user.email,
-            "picture": user.picture
-        })
-
-    return JsonResponse({"error": "Invalid request"}, status=405)
-
-
-# ================= STATS (OPTIONAL) =================
-def stats(request):
-    return JsonResponse({
-        "total_users": UserRegister.objects.count(),
-        "total_logins": LoginHistory.objects.count()
-    })
